@@ -198,12 +198,4 @@ A user is treated as admin if:
 - For Hindi or Telugu PDF rendering on another machine, set `PDF_FONT_PATH` in `.env` if the default system fonts do not render properly.
 - Do not commit real API keys or production secrets.
 
-## Viva Explanation Points
 
-- Flask routes handle authentication, dashboard flow, story generation, downloads, and admin monitoring.
-- SQLite stores users and generated stories with a foreign key relationship.
-- Passwords are never stored directly; only hashed values are saved.
-- Gemini acts as the transformer-based NLP model for context-aware story generation.
-- `deep-translator` provides multilingual output for Hindi and Telugu.
-- `gTTS` converts the generated story into downloadable speech.
-- The UI is responsive, beginner-friendly, and includes dark mode and history for a polished project demo.
