@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}StorySpeech AI | Home{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-7 col-lg-8">
+                <div class="eyebrow"><i class="bi bi-stars"></i> BTech AIML Mini Project</div>
+                <h1 class="display-5 fw-bold mt-3">Multilingual Story Generation & Speech System</h1>
+                <p class="lead mt-3">
+                    Generate emotion-aware stories from keywords, translate them into English, Hindi, or Telugu, and convert them into downloadable speech.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    {% if current_user %}
+                        <a class="btn btn-brand btn-lg" href="{{ url_for('dashboard') }}">
+                            <i class="bi bi-magic"></i> Open Dashboard
+                        </a>
+                    {% else %}
+                        <a class="btn btn-brand btn-lg" href="{{ url_for('register') }}">
+                            <i class="bi bi-rocket-takeoff"></i> Start Project Demo
+                        </a>
+                        <a class="btn btn-outline-light btn-lg" href="{{ url_for('login') }}">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container feature-band">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <i class="bi bi-lightbulb"></i>
+                <h2>Keyword Storytelling</h2>
+                <p>Turns student-entered prompts into complete stories with a clear emotion and context.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <i class="bi bi-translate"></i>
+                <h2>Three Languages</h2>
+                <p>Supports English, Hindi, and Telugu using translation after story generation.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <i class="bi bi-file-earmark-music"></i>
+                <h2>Speech And PDF</h2>
+                <p>Creates playable MP3 audio and clean PDF downloads for project presentation.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="workflow-section">
+    <div class="container">
+        <div class="section-title">
+            <span class="eyebrow"><i class="bi bi-diagram-3"></i> Workflow</span>
+            <h2>Login, generate, listen, download.</h2>
+        </div>
+        <div class="workflow-grid">
+            <div><span>1</span>Login</div>
+            <div><span>2</span>Enter Keywords</div>
+            <div><span>3</span>Select Language</div>
+            <div><span>4</span>Generate Story</div>
+            <div><span>5</span>Play Audio</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Admin | StorySpeech AI{% endblock %}
+
+{% block content %}
+<section class="dashboard-header">
+    <div class="container">
+        <div class="eyebrow"><i class="bi bi-shield-lock"></i> Admin</div>
+        <h1 class="h2 mt-2">Project Monitor</h1>
+    </div>
+</section>
+
+<section class="container">
+    <div class="stats-strip admin-stats mb-4">
+        <div><strong>{{ stats.users_count }}</strong><span>Users</span></div>
+        <div><strong>{{ stats.stories_count }}</strong><span>Stories</span></div>
+        <div><strong>{{ stats.audio_count }}</strong><span>Audio Files</span></div>
+    </div>
+
+    <div class="table-shell">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Keywords</th>
+                    <th>Language</th>
+                    <th>Emotion</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recent %}
+                    <tr>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.keywords }}</td>
+                        <td>{{ item.language }}</td>
+                        <td><span class="history-emotion">{{ item.emotion }}</span></td>
+                        <td>{{ item.created_at }}</td>
+                        <td><a class="btn btn-sm btn-outline-brand" href="{{ url_for('result', story_id=item.id) }}">Open</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="text-center text-muted py-4">No stories generated yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

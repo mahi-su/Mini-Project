@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | StorySpeech AI{% endblock %}
+
+{% block content %}
+<section class="dashboard-header">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3">
+            <div>
+                <div class="eyebrow"><i class="bi bi-grid"></i> Dashboard</div>
+                <h1 class="h2 mt-2 mb-1">Hello, {{ current_user.username }}</h1>
+                <p class="text-muted mb-0">Create multilingual stories with emotion, audio, and PDF output.</p>
+            </div>
+            <div class="stats-strip">
+                <div>
+                    <strong>{{ totals.count }}</strong>
+                    <span>Total stories</span>
+                </div>
+                <div>
+                    <strong>{{ totals.latest_story }}</strong>
+                    <span>Latest</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container dashboard-grid">
+    <div class="generator-panel">
+        <form action="{{ url_for('generate') }}" method="post" id="storyForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <h2 class="h4 mb-1">Generate Story</h2>
+                    <p class="text-muted mb-0">Choose inputs and create a fresh AI story.</p>
+                </div>
+                <span class="status-pill"><i class="bi bi-cpu"></i> AI Ready</span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="keywords">Keywords</label>
+                <textarea class="form-control keyword-box" id="keywords" name="keywords" rows="4" maxlength="200" placeholder="Example: robot, village, moonlight, friendship" required></textarea>
+                <div class="d-flex justify-content-between mt-2 small text-muted">
+                    <span>Separate ideas with commas.</span>
+                    <span id="keywordCounter">0/200</span>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <label class="form-label">Language</label>
+                    <div class="segmented-control">
+                        {% for language in languages %}
+                            <input type="radio" class="btn-check" name="language" id="lang{{ language }}" value="{{ language }}" {% if loop.first %}checked{% endif %}>
+                            <label class="btn" for="lang{{ language }}">{{ language }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label" for="voice">Voice Style</label>
+                    <select class="form-select" id="voice" name="voice">
+                        <option value="standard">Standard</option>
+                        <option value="india">India</option>
+                        <option value="uk">UK</option>
+                        <option value="australia">Australia</option>
+                    </select>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="slow_audio" name="slow_audio">
+                        <label class="form-check-label" for="slow_audio">Slow narration</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <label class="form-label">Story Emotion</label>
+                <div class="emotion-grid">
+                    {% for emotion in emotions %}
+                        <input type="radio" class="btn-check" name="emotion" id="emotion{{ emotion }}" value="{{ emotion }}" {% if emotion == "Adventure" %}checked{% endif %}>
+                        <label class="emotion-option" for="emotion{{ emotion }}">
+                            {% if emotion == "Happy" %}<i class="bi bi-emoji-smile"></i>{% endif %}
+                            {% if emotion == "Horror" %}<i class="bi bi-moon"></i>{% endif %}
+                            {% if emotion == "Adventure" %}<i class="bi bi-compass"></i>{% endif %}
+                            {% if emotion == "Funny" %}<i class="bi bi-emoji-laughing"></i>{% endif %}
+                            {% if emotion == "Motivational" %}<i class="bi bi-trophy"></i>{% endif %}
+                            <span>{{ emotion }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button class="btn btn-brand btn-lg w-100 mt-4" type="submit" id="generateBtn">
+                <i class="bi bi-magic"></i> Generate Story
+            </button>
+        </form>
+    </div>
+
+    <aside class="history-panel">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Story History</h2>
+            <i class="bi bi-clock-history text-muted"></i>
+        </div>
+        {% if stories %}
+            <div class="history-list">
+                {% for story in stories %}
+                    <a class="history-item" href="{{ url_for('result', story_id=story.id) }}">
+                        <span class="history-emotion">{{ story.emotion }}</span>
+                        <strong>{{ story.keywords }}</strong>
+                        <small>{{ story.language }} | {{ story.created_at }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="bi bi-journal-text"></i>
+                <p>No stories yet.</p>
+            </div>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

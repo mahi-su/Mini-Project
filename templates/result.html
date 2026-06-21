@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Story Result | StorySpeech AI{% endblock %}
+
+{% block content %}
+<section class="result-header">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3">
+            <div>
+                <div class="eyebrow"><i class="bi bi-file-earmark-text"></i> Story Result</div>
+                <h1 class="h2 mt-2 mb-1">{{ story.emotion }} Story</h1>
+                <p class="text-muted mb-0">{{ story.language }} story generated from: {{ story.keywords }}</p>
+            </div>
+            <a class="btn btn-outline-brand" href="{{ url_for('dashboard') }}">
+                <i class="bi bi-plus-circle"></i> New Story
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="container result-grid">
+    <article class="story-panel">
+        <div class="story-toolbar">
+            <div>
+                <span class="history-emotion">{{ story.emotion }}</span>
+                <span class="text-muted small ms-2">{{ story.created_at }}</span>
+            </div>
+            <button class="btn icon-text-btn" type="button" id="copyStoryBtn" data-bs-toggle="tooltip" data-bs-title="Copy story">
+                <i class="bi bi-copy"></i> Copy
+            </button>
+        </div>
+        <div class="story-output" id="storyText">{{ story.generated_story }}</div>
+    </article>
+
+    <aside class="actions-panel">
+        <h2 class="h5 mb-3">Downloads</h2>
+        {% if story.audio_file %}
+            <audio class="w-100 mb-3" controls>
+                <source src="{{ url_for('static', filename='audio/' ~ story.audio_file) }}" type="audio/mpeg">
+            </audio>
+            <a class="btn btn-brand w-100 mb-2" href="{{ url_for('download_audio', story_id=story.id) }}">
+                <i class="bi bi-download"></i> Download MP3
+            </a>
+        {% else %}
+            <div class="alert alert-warning small">Audio was not generated for this story.</div>
+        {% endif %}
+        <a class="btn btn-outline-brand w-100 mb-2" href="{{ url_for('download_pdf', story_id=story.id) }}">
+            <i class="bi bi-file-earmark-pdf"></i> Download PDF
+        </a>
+
+        <hr>
+
+        <h2 class="h5 mb-3">Regenerate</h2>
+        <form action="{{ url_for('generate') }}" method="post" class="mb-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="keywords" value="{{ story.keywords }}">
+            <input type="hidden" name="language" value="{{ story.language }}">
+            <input type="hidden" name="emotion" value="{{ story.emotion }}">
+            <input type="hidden" name="voice" value="standard">
+            <button class="btn btn-outline-brand w-100" type="submit">
+                <i class="bi bi-arrow-repeat"></i> Regenerate
+            </button>
+        </form>
+
+        <form action="{{ url_for('delete_story', story_id=story.id) }}" method="post" data-confirm="Delete this story from history?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button class="btn btn-outline-danger w-100" type="submit">
+                <i class="bi bi-trash"></i> Delete Story
+            </button>
+        </form>
+    </aside>
+</section>
+{% endblock %}
